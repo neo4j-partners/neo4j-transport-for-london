@@ -1,0 +1,44 @@
+{
+    "config": {
+        "reset_db": true,
+        "index_all_properties": false
+    },
+    "sources": [
+        {
+          "type": "text",
+          "name": "london_stations",
+          "uri": "gs://leerazo-demos/dataflow-tfl/csv/london_transport_datasets_London_stations-no_header.csv",
+          "format": "EXCEL",
+          "delimiter": ",",
+          "ordered_field_names": "Station,OS_X,OS_Y,Latitude,Longitude,Zone,Postcode,Zone_original"
+        },
+        {
+            "type": "text",
+            "name": "london_tube_lines",
+            "uri": "gs://leerazo-demos/dataflow-tfl/csv/london_transport_datasets_London_tube_lines-no_header.csv",
+            "format": "EXCEL",
+            "delimiter": ",",
+            "ordered_field_names": "Tube_Line,From_Station,To_Station"
+        }
+    ],
+    "targets": [
+        {
+            "node": {
+                "source": "london_stations",
+                "name": "TfL_Station",
+                "mode": "merge",
+                "transform": {
+                    "group": true
+                },
+                "mappings": {
+                    "labels": [
+                        "\"Station_Label\""
+                    ],
+                    "keys": [
+                        {"Station": "name"}
+                    ]
+                }
+            }
+        }
+    ]
+}
